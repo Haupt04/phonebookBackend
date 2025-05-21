@@ -1,8 +1,13 @@
 import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
+import path from 'path'
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
 const app = express()
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 app.use(express.static('dist'));
 app.use(cors());
@@ -72,10 +77,6 @@ app.post("/api/persons", (request, response) => {
     response.json(data)
 })
 
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
-});
-
 app.get("/api/persons/:id", (request, response) => {
     const id = request.params.id
     const person = data.find(dat => dat.id === id)
@@ -101,9 +102,12 @@ app.delete("/api/persons/:id", (request, response) => {
   response.status(204).end()
 })
 
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
+});
 
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
