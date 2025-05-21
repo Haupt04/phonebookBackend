@@ -4,6 +4,7 @@ import cors from 'cors'
 
 const app = express()
 
+app.use(express.static('dist'));
 app.use(cors());
 app.use(express.json());
 
@@ -70,6 +71,10 @@ app.post("/api/persons", (request, response) => {
    
     response.json(data)
 })
+
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
+});
 
 app.get("/api/persons/:id", (request, response) => {
     const id = request.params.id
